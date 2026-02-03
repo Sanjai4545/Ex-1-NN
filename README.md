@@ -1,7 +1,6 @@
-<H3>ENTER YOUR NAME : sanjai.T</H3>
-<H3>ENTER YOUR REGISTER NO : 212224240144</H3>
+<H3>ENTER YOUR NAME: Sanjai T</H3>
+<H3>ENTER YOUR REGISTER NO: 212224240144</H3>
 <H3>EX. NO.1</H3>
-<H3>DATE :30.01.2026        </H3>
 <H1 ALIGN =CENTER> Introduction to Kaggle and Data preprocessing</H1>
 
 ## AIM:
@@ -38,121 +37,116 @@ STEP 6:Splitting the data into test and train<BR>
 
 ##  PROGRAM:
 
-```
+### Import libraries
+```PYTHON
 import pandas as pd
-import io
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import MinMaxScaler
+import numpy as np
+import seaborn as sns   # for outlier detection
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
-
-df = pd.read_csv("Churn_Modelling.csv")
-df
-
-df.isnull().sum()
-
-df.fillna(0)
-df.isnull().sum()
-
-df.duplicated()
-
-df['EstimatedSalary'].describe()
-
-scaler = StandardScaler()
-inc_cols = ['CreditScore', 'Tenure', 'Balance', 'EstimatedSalary']
-scaled_values = scaler.fit_transform(df[inc_cols])
-df[inc_cols] = pd.DataFrame(scaled_values, columns = inc_cols, index = df.index)
-df
-
-x = df.iloc[:, :-1]
-y = df.iloc[:, -1]
-
-print("X Values")
-x
-
-print("Y Values")
-y
-
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2, random_state = 42)
-
-print("X Training data")
-x_train
-
-print("X Testing data")
-x_test
-
 ```
+
+### Read the dataset directly
+```PYTHON
+df = pd.read_csv('Churn_Modelling.csv')
+print("First 5 rows of the dataset:")
+df.head()
+```
+
+### Find missing values
+```PYTHON
+print(df.isnull().sum())
+```
+
+### Identify categorical columns
+```PYTHON
+categorical_cols = df.select_dtypes(include=['object']).columns
+print("\nCategorical columns:", categorical_cols.tolist())
+```
+
+### Apply Label Encoding to categorical columns
+```PYTHON
+label_encoder = LabelEncoder()
+for col in categorical_cols:
+    df[col] = label_encoder.fit_transform(df[col])
+
+print("\nData after encoding:")
+print(df.head(5))
+```
+### Handling missing values only for numeric columns
+```PYTHON
+for col in df.select_dtypes(include=['float64', 'int64']).columns:
+    df[col].fillna(df[col].mean().round(1), inplace=True)
+
+df.isnull().sum()
+```
+
+### Detect Outliers (example using seaborn)
+```PYTHON
+print("\nDetecting outliers (example: CreditScore column):")
+sns.boxplot(x=df['CreditScore'])
+```
+
+### Example statistics for 'CreditScore'
+```PYTHON
+print("\nStatistics for 'CreditScore':")
+df['CreditScore'].describe()
+```
+
+### Splitting features (X) and labels (y)
+```PYTHON
+X = df.drop('Exited', axis=1).values  # Features (drop target column)
+y = df['Exited'].values   
+
+print("\nFeature Matrix (X):")
+print(X)
+print("\nLabel Vector (y):")
+print(y)
+```
+### Normalizing the features
+```PYTHON
+scaler = MinMaxScaler()
+X_normalized = scaler.fit_transform(X)
+```
+
+### First 5 rows after normalization
+```PYTHON
+pd.DataFrame(X_normalized, columns=df.columns[:-1]).head()
+```
+
+### Splitting into Training and Testing Sets
+```PYTHON
+X_train, X_test, y_train, y_test = train_test_split(
+    X_normalized, y, test_size=0.2, random_state=42
+)
+
+print("\nShapes of Training and Testing sets:")
+print("X_train:", X_train.shape)
+print("X_test:", X_test.shape)
+print("y_train:", y_train.shape)
+print("y_test:", y_test.shape)
+```
+
 ## OUTPUT:
+<img width="1314" height="299" alt="image" src="https://github.com/user-attachments/assets/da779765-f163-409e-8b89-90bc62bf764d" />
 
+<img width="272" height="353" alt="image" src="https://github.com/user-attachments/assets/6f50ed2b-1bf9-46c4-9c17-1e1b8c0b42d3" />
 
-# Read the dataset from drive
+<img width="616" height="30" alt="image" src="https://github.com/user-attachments/assets/a94f0c7a-6ed4-484a-9d12-c4c09fa9d959" />
 
+<img width="787" height="498" alt="image" src="https://github.com/user-attachments/assets/bab11f8b-d66f-4554-8461-cc5fd5c847c0" />
 
-<img width="1040" height="332" alt="image" src="https://github.com/user-attachments/assets/95886d73-5ced-416e-9781-bec388c52d3c" />
+<img width="342" height="596" alt="image" src="https://github.com/user-attachments/assets/3f4c8b15-ebef-478c-a777-190fe25eadd5" />
 
+<img width="747" height="580" alt="image" src="https://github.com/user-attachments/assets/3eb2bf96-5183-479d-a4a8-360df6a66202" />
 
-# Finding Missing Values
+<img width="410" height="463" alt="image" src="https://github.com/user-attachments/assets/71db54ed-4748-4cfe-9399-8bff5b26b414" />
 
+<img width="758" height="444" alt="image" src="https://github.com/user-attachments/assets/b01e1cd0-3a4c-4307-821e-0e5b620c503a" />
 
-<img width="148" height="413" alt="image" src="https://github.com/user-attachments/assets/da4cc688-b622-4835-8100-70bcc2d269bf" />
+<img width="1343" height="310" alt="image" src="https://github.com/user-attachments/assets/a7bc5719-3826-46fa-b4bb-3db26ce24657" />
 
-
-# Handling Missing values
-
-
-
-<img width="131" height="423" alt="image" src="https://github.com/user-attachments/assets/a7a16c50-ec35-4847-b3ed-19b510026ca8" />
-
-
-
-# Check for Duplicates
-
-
-<img width="175" height="365" alt="image" src="https://github.com/user-attachments/assets/8d9b7ac4-cf02-474a-9405-2e896a1b0252" />
-
-# Detect Outliers
-
-
-
-
-<img width="192" height="254" alt="image" src="https://github.com/user-attachments/assets/76373161-9f91-4ad5-aee9-c80c671c8539" />
-
-
-
-# Normalize the dataset
-
-
-
-
-<img width="1039" height="367" alt="image" src="https://github.com/user-attachments/assets/8a952d37-3f80-4b58-8b03-7f4dcdc8f859" />
-
-
-
-
-# Split the dataset into input and output
-
-
-
-
-<img width="998" height="347" alt="image" src="https://github.com/user-attachments/assets/a05d50d7-c535-41d4-b291-1ea95b65256e" />
-
-
-
-
-<img width="275" height="379" alt="image" src="https://github.com/user-attachments/assets/0a8d410b-45b0-4299-9bbb-0531c61d005d" />
-
-# Print the training data and testing data
-
-
-
-
-<img width="1003" height="351" alt="image" src="https://github.com/user-attachments/assets/c7697a45-94fd-4484-9b66-f908177a9601" />
-
-
-
-
-<img width="967" height="322" alt="image" src="https://github.com/user-attachments/assets/fec07e45-9e7b-4247-a91e-08cf03d67ff2" />
-
-
+<img width="830" height="327" alt="image" src="https://github.com/user-attachments/assets/e15d1aa6-6202-4c43-8308-ef951a9ea6e4" />
 
 
 ## RESULT:
